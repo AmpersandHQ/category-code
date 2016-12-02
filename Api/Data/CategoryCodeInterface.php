@@ -1,6 +1,9 @@
 <?php
 namespace Ampersand\CategoryCode\Api\Data;
 
+/**
+ * @api
+ */
 interface CategoryCodeInterface
 {
     const CATEGORY_CODE = 'category_code';

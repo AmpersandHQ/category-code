@@ -18,4 +18,17 @@
             <resource ref="Magento_Catalog::categories" />
         </resources>
     </route>
+    <route url="/V1/categories-with-codes/:categoryCode/products" method="POST">
+        <service class="Ampersand\CategoryCode\Api\CodedCategoryLinkRepositoryInterface" method="save" />
+        <resources>
+            <resource ref="Magento_Catalog::categories" />
+        </resources>
+    </route>
+    <route url="/V1/categories-with-codes/:categoryCode/products/:sku" method="DELETE">
+        <service class="Ampersand\CategoryCode\Api\CodedCategoryLinkRepositoryInterface" method="deleteByIds" />
+        <resources>
+            <resource ref="Magento_Catalog::categories" />
+        </resources>
+    </route>
+
 </routes>

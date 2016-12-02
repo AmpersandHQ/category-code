@@ -2,6 +2,7 @@
 namespace Ampersand\CategoryCode\Model;
 
 use Ampersand\CategoryCode\Api\Data\CategoryCodeInterface;
+use Ampersand\CategoryCode\Api\Data\CategoryCodeInterfaceFactory;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\EntityManager\EntityManager;
 
@@ -14,7 +15,7 @@ class CategoryCodeRepository
     public function __construct(
         EntityManager $entityManager,
         ResourceConnection $resourceConnection,
-        CategoryCodeFactory $categoryCodeFactory
+        CategoryCodeInterfaceFactory $categoryCodeFactory
     ) {
         $this->entityManager = $entityManager;
         $this->resourceConnection = $resourceConnection;
