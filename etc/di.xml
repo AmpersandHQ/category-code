@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Ampersand\CategoryCode\Api\CodedCategoryRepositoryInterface" type="Ampersand\CategoryCode\Model\CodedCategoryRepository"/>
+    <preference for="Ampersand\CategoryCode\Api\Data\CategoryCodeInterface" type="Ampersand\CategoryCode\Model\CategoryCode"/>
+    <preference for="Ampersand\CategoryCode\Api\CodedCategoryLinkRepositoryInterface" type="Ampersand\CategoryCode\Model\CodedCategoryLinkRepository"/>
+    <preference for="Ampersand\CategoryCode\Api\Data\CodedCategoryProductLinkInterface" type="Ampersand\CategoryCode\Model\CodedCategoryProductLink"/>
+    <type name="Magento\Framework\EntityManager\MetadataPool">
+        <arguments>
+            <argument name="metadata" xsi:type="array">
+                <item name="Ampersand\CategoryCode\Api\Data\CategoryCodeInterface" xsi:type="array">
+                    <item name="entityTableName" xsi:type="string">category_code</item>
+                    <item name="identifierField" xsi:type="string">category_code</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\EntityManager\HydratorPool">
+        <arguments>
+            <argument name="hydrators" xsi:type="array">
+                <item name="Ampersand\CategoryCode\Api\Data\CategoryCodeInterface" xsi:type="string">Magento\Framework\EntityManager\Hydrator</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\EntityManager\Operation\ExtensionPool">
+        <arguments>
+            <argument name="extensionActions" xsi:type="array">
+                <item name="Magento\Catalog\Api\Data\CategoryInterface" xsi:type="array">
+                    <item name="read" xsi:type="array">
+                        <item name="parent_code_read" xsi:type="string">Ampersand\CategoryCode\Model\Category\ReadHandler</item>
+                    </item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+</config>

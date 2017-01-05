@@ -1,0 +1,34 @@
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <route url="/V1/categories-with-codes" method="POST">
+        <service class="Ampersand\CategoryCode\Api\CodedCategoryRepositoryInterface" method="save" />
+        <resources>
+            <resource ref="Magento_Catalog::categories" />
+        </resources>
+    </route>
+    <route url="/V1/categories-with-codes/:categoryCode" method="GET">
+        <service class="Ampersand\CategoryCode\Api\CodedCategoryRepositoryInterface" method="get" />
+        <resources>
+            <resource ref="Magento_Catalog::categories" />
+        </resources>
+    </route>
+    <route url="/V1/categories-with-codes/:categoryCode" method="DELETE">
+        <service class="Ampersand\CategoryCode\Api\CodedCategoryRepositoryInterface" method="deleteByIdentifier" />
+        <resources>
+            <resource ref="Magento_Catalog::categories" />
+        </resources>
+    </route>
+    <route url="/V1/categories-with-codes/:categoryCode/products" method="POST">
+        <service class="Ampersand\CategoryCode\Api\CodedCategoryLinkRepositoryInterface" method="save" />
+        <resources>
+            <resource ref="Magento_Catalog::categories" />
+        </resources>
+    </route>
+    <route url="/V1/categories-with-codes/:categoryCode/products/:sku" method="DELETE">
+        <service class="Ampersand\CategoryCode\Api\CodedCategoryLinkRepositoryInterface" method="deleteByIds" />
+        <resources>
+            <resource ref="Magento_Catalog::categories" />
+        </resources>
+    </route>
+
+</routes>
