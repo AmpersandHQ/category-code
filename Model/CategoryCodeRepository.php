@@ -24,6 +24,7 @@ class CategoryCodeRepository
 
     public function save($code, $int)
     {
+        $this->validateCategoryCode($code);
         $entity = $this->categoryCodeFactory->create()
             ->setCategoryCode($code)
             ->setCategoryId($int);
@@ -32,6 +33,7 @@ class CategoryCodeRepository
 
     public function getId($code)
     {
+        $this->validateCategoryCode($code);
         $entity = $this->entityManager->load($this->categoryCodeFactory->create(), (string)$code);
         return $entity->getCategoryId();
     }
@@ -46,5 +48,16 @@ class CategoryCodeRepository
 
         return isset($record[CategoryCodeInterface::CATEGORY_CODE])
             ? $record[CategoryCodeInterface::CATEGORY_CODE] : null;
+    }
+
+    private function validateCategoryCode($categoryCode)
+    {
+        if ('' === $categoryCode || null === $categoryCode) {
+            throw new \Exception('Missing required code.');
+        }
+
+        if (!\is_string($categoryCode) && !\is_int($categoryCode)) {
+            throw new \InvalidArgumentException('Category code must be a string or an int.');
+        }
     }
 }

@@ -25,66 +25,71 @@ class CodedCategoryRepository implements CodedCategoryRepositoryInterface
 
     public function save(CategoryInterface $category)
     {
-        $lockName = $this->getLockName($category->getCustomAttribute(Code::CODE)->getValue(), 'save');
-
-        if (!$this->lockService->acquireLock($lockName, 0)) {
-            throw new \RuntimeException('A conflict occurred while saving the category. No changes were applied.');
+        if (!$categoryCodeAttribute = $category->getCustomAttribute(Code::CODE)) {
+            throw new \Exception("Missing required attribute 'code'.");
         }
 
+        $categoryCode = $categoryCodeAttribute->getValue();
+        $this->acquireLock($categoryCode);
+
         try {
-            $this->replaceCodesWithIds($category);
+            $this->replaceCodesWithIds($categoryCode, $category);
             $this->categoryRepository->save($category);
         } finally {
-            $this->lockService->releaseLock($lockName);
+            $this->releaseLock($categoryCode);
         }
     }
 
     public function get($categoryCode, $storeId = null)
     {
-        return $this->categoryRepository->get($this->replaceCodeWithId($categoryCode));
+        $categoryId = $this->categoryCodeRepository->getId($categoryCode);
+
+        return $this->categoryRepository->get($categoryId);
     }
 
     public function deleteByIdentifier($categoryCode)
     {
-        $lockName = $this->getLockName($categoryCode, 'delete');
-
-        if (!$this->lockService->acquireLock($lockName, 0)) {
-            throw new \RuntimeException('A conflict occurred while deleting the category. No changes were applied.');
-        }
+        $this->acquireLock($categoryCode);
 
         try {
-            $this->categoryRepository->deleteByIdentifier($this->replaceCodeWithId($categoryCode));
+            if (null !== $categoryId = $this->categoryCodeRepository->getId($categoryCode)) {
+                $this->categoryRepository->deleteByIdentifier($categoryId);
+            }
         } finally {
-            $this->lockService->releaseLock($lockName);
+            $this->releaseLock($categoryCode);
         }
     }
 
-    private function getLockName($code, $action)
+    private function acquireLock($code)
     {
-        return "category_{$action}.{$code}";
-    }
-
-    private function replaceCodesWithIds(CategoryInterface $category)
-    {
-        if ($id = $this->replaceCodeWithId($category->getCustomAttribute(Code::CODE)->getValue())) {
-            $category->setId($id);
-        }
-
-        if ($parentId = $this->replaceCodeWithId($category->getExtensionAttributes()->getParentCode())) {
-            $category->setParentId($parentId);
+        if (!$this->lockService->acquireLock($this->getLockName($code), 0)) {
+            throw new \RuntimeException('A conflict occurred while saving or deleting the category. No changes were applied.');
         }
     }
 
-    /**
-     * @param $code
-     * @return false|int
-     */
-    private function replaceCodeWithId($code)
+    private function releaseLock($code)
     {
-        if ($code && ($id = $this->categoryCodeRepository->getId($code))) {
-            return $id;
-        } else {
-            return false;
+        $this->lockService->releaseLock($this->getLockName($code));
+    }
+
+    private function getLockName($code)
+    {
+        return "category.{$code}";
+    }
+
+    private function replaceCodesWithIds($categoryCode, CategoryInterface $category)
+    {
+        if (null !== $categoryId = $this->categoryCodeRepository->getId($categoryCode)) {
+            $category->setId($categoryId);
+        }
+
+        if ($extensionAttributes = $category->getExtensionAttributes()) {
+            if (null !== $parentCode = $extensionAttributes->getParentCode()) {
+                if (null === $parentId = $this->categoryCodeRepository->getId($parentCode)) {
+                    throw new \RuntimeException("Parent category with code '$parentCode' does not exist.");
+                }
+                $category->setParentId($parentId);
+            }
         }
     }
 }
