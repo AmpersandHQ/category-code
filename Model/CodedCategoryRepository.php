@@ -5,6 +5,7 @@ use Magento\Catalog\Api\CategoryRepositoryInterface;
 use Magento\Catalog\Api\Data\CategoryInterface;
 use Ampersand\CategoryCode\Attribute\Backend\Code;
 use Ampersand\CategoryCode\Api\CodedCategoryRepositoryInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 use SnowIO\Lock\Api\LockService;
 
 class CodedCategoryRepository implements CodedCategoryRepositoryInterface
@@ -43,6 +44,10 @@ class CodedCategoryRepository implements CodedCategoryRepositoryInterface
     public function get($categoryCode, $storeId = null)
     {
         $categoryId = $this->categoryCodeRepository->getId($categoryCode);
+
+        if (null === $categoryId) {
+            throw new NoSuchEntityException;
+        }
 
         return $this->categoryRepository->get($categoryId);
     }
