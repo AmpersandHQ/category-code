@@ -70,10 +70,14 @@ class CodedCategoryRepository implements CodedCategoryRepositoryInterface
             $category->setId($id);
         }
 
-        if ($parentId = $this->replaceCodeWithId($category->getExtensionAttributes()->getParentCode())) {
-            $category->setParentId($parentId);
-        } else {
-            throw new \InvalidArgumentException("Invalid parent code " . $category->getExtensionAttributes()->getParentCode());
+        if (($extensionAttributes = $category->getExtensionAttributes())  && null
+            !== $extensionAttributes->getParentCode()) {
+
+            if ($parentId = $this->replaceCodeWithId($extensionAttributes->getParentCode())) {
+                $category->setParentId($parentId);
+            } else {
+                throw new \InvalidArgumentException("Invalid parent code " . $category->getExtensionAttributes()->getParentCode());
+            }
         }
     }
 
