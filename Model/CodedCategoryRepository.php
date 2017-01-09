@@ -72,6 +72,8 @@ class CodedCategoryRepository implements CodedCategoryRepositoryInterface
 
         if ($parentId = $this->replaceCodeWithId($category->getExtensionAttributes()->getParentCode())) {
             $category->setParentId($parentId);
+        } else {
+            throw new \InvalidArgumentException("Invalid parent code " . $category->getExtensionAttributes()->getParentCode());
         }
     }
 
