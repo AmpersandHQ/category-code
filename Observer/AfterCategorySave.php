@@ -1,7 +1,6 @@
 <?php
 namespace Ampersand\CategoryCode\Observer;
 
-use Ampersand\CategoryCode\Attribute\Backend\Code;
 use Magento\Catalog\Api\Data\CategoryInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
@@ -21,6 +20,6 @@ class AfterCategorySave implements ObserverInterface
         /** @var CategoryInterface $category */
         $category = $observer->getDataByKey('entity');
 
-        $this->categoryCodeRepository->save($category->getCustomAttribute(Code::CODE)->getValue(), $category->getId());
+        $this->categoryCodeRepository->save($category->getExtensionAttributes()->getCode(), $category->getId());
     }
 }

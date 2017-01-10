@@ -3,7 +3,6 @@ namespace Ampersand\CategoryCode\Model;
 
 use Magento\Catalog\Api\CategoryRepositoryInterface;
 use Magento\Catalog\Api\Data\CategoryInterface;
-use Ampersand\CategoryCode\Attribute\Backend\Code;
 use Ampersand\CategoryCode\Api\CodedCategoryRepositoryInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use SnowIO\Lock\Api\LockService;
@@ -26,11 +25,14 @@ class CodedCategoryRepository implements CodedCategoryRepositoryInterface
 
     public function save(CategoryInterface $category)
     {
-        if (!$categoryCodeAttribute = $category->getCustomAttribute(Code::CODE)) {
+        if (null === $extensionAttributes = $category->getExtensionAttributes()) {
+            throw new \Exception("Missing extension attributes.");
+        }
+
+        if (null === $categoryCode = $extensionAttributes->getCode()) {
             throw new \Exception("Missing required attribute 'code'.");
         }
 
-        $categoryCode = $categoryCodeAttribute->getValue();
         $this->acquireLock($categoryCode);
 
         try {
