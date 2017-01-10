@@ -2,5 +2,6 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Api/etc/extension_attributes.xsd">
     <extension_attributes for="Magento\Catalog\Api\Data\CategoryInterface">
         <attribute code="parent_code" type="string" />
+        <attribute code="code" type="string"/>
     </extension_attributes>
 </config>

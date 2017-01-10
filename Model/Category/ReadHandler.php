@@ -26,8 +26,10 @@ class ReadHandler implements ExtensionInterface
      */
     public function execute($entity, $arguments = [])
     {
-        $parentCode = $this->categoryCodeRepository->getCode($entity->getParentId());
+        $code = $this->categoryCodeRepository->getCode($entity->getId());
         $extensionAttributes = $entity->getExtensionAttributes() ?: $this->categoryExtensionFactory->create();
+        $extensionAttributes->setCode($code);
+        $parentCode = $this->categoryCodeRepository->getCode($entity->getParentId());
         $extensionAttributes->setParentCode($parentCode);
         $entity->setExtensionAttributes($extensionAttributes);
 
