@@ -30,5 +30,10 @@
             <resource ref="Magento_Catalog::categories" />
         </resources>
     </route>
-
+    <route url="/V1/categories-with-codes/:categoryCode/move" method="PUT">
+        <service class="Ampersand\CategoryCode\Api\CodedCategoryManagementInterface" method="move" />
+        <resources>
+            <resource ref="Magento_Catalog::categories"/>
+        </resources>
+    </route>
 </routes>
