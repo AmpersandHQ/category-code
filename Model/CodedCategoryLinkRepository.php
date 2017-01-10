@@ -6,6 +6,7 @@ use Ampersand\CategoryCode\Api\Data\CodedCategoryProductLinkInterface;
 use Magento\Catalog\Api\CategoryLinkRepositoryInterface;
 use Magento\Catalog\Api\Data\CategoryProductLinkExtensionFactory;
 use Magento\Catalog\Api\Data\CategoryProductLinkInterfaceFactory;
+use Magento\Framework\Exception\NoSuchEntityException;
 
 class CodedCategoryLinkRepository implements CodedCategoryLinkRepositoryInterface
 {
@@ -29,6 +30,10 @@ class CodedCategoryLinkRepository implements CodedCategoryLinkRepositoryInterfac
     public function save(CodedCategoryProductLinkInterface $productLink)
     {
         $categoryId = $this->categoryCodeRepository->getId($productLink->getCategoryCode());
+
+        if (null === $categoryId) {
+            throw new NoSuchEntityException;
+        }
 
         $categoryProductLink = $this->categoryProductLinkFactory->create()
             ->setCategoryId($categoryId)
