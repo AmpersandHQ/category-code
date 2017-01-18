@@ -20,6 +20,10 @@ class AfterCategorySave implements ObserverInterface
         /** @var CategoryInterface $category */
         $category = $observer->getDataByKey('entity');
 
-        $this->categoryCodeRepository->save($category->getExtensionAttributes()->getCode(), $category->getId());
+        if ($extensionAttributes = $category->getExtensionAttributes()) {
+            if (null !== $code = $extensionAttributes->getCode()) {
+                $this->categoryCodeRepository->save($code, $category->getId());
+            }
+        }
     }
 }
