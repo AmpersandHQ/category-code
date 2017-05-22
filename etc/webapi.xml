@@ -30,6 +30,12 @@
             <resource ref="Magento_Catalog::categories" />
         </resources>
     </route>
+    <route url="/V1/categories-with-codes/:categoryCode/bulk-products" method="POST">
+        <service class="Ampersand\CategoryCode\Api\CodedCategoryLinkManagementInterface" method="assignProductsToCategory" />
+        <resources>
+            <resource ref="Magento_Catalog::categories" />
+        </resources>
+    </route>
     <route url="/V1/categories-with-codes/:categoryCode/products/:sku" method="DELETE">
         <service class="Ampersand\CategoryCode\Api\CodedCategoryLinkRepositoryInterface" method="deleteByIds" />
         <resources>

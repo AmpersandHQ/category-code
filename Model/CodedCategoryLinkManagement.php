@@ -36,4 +36,25 @@ class CodedCategoryLinkManagement implements \Ampersand\CategoryCode\Api\CodedCa
 
         return $this->categoryLinkManagement->assignProductToCategories($productSku, $categoryIds);
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function assignProductsToCategory(array $productSkus, $categoryCode)
+    {
+        $categoryId = $this->categoryCodeRepository->getId($categoryCode);
+
+        if (empty($categoryId)) {
+            throw new \Magento\Framework\Exception\NoSuchEntityException(__('Given category code can not be found in the system'));
+        }
+
+        // Assert product exists. Not found exception will be thrown if not exists
+        array_walk($productSkus, [$this->productRepository, 'get']);
+
+        foreach ($productSkus as $productSku) {
+            $this->categoryLinkManagement->assignProductToCategories($productSku, $categoryId);
+        }
+
+        return true;
+    }
 }
