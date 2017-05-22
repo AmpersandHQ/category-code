@@ -5,6 +5,7 @@
     <preference for="Ampersand\CategoryCode\Api\CodedCategoryLinkRepositoryInterface" type="Ampersand\CategoryCode\Model\CodedCategoryLinkRepository"/>
     <preference for="Ampersand\CategoryCode\Api\Data\CodedCategoryProductLinkInterface" type="Ampersand\CategoryCode\Model\CodedCategoryProductLink"/>
     <preference for="Ampersand\CategoryCode\Api\CodedCategoryManagementInterface" type="Ampersand\CategoryCode\Model\CodedCategoryManagement"/>
+    <preference for="Ampersand\CategoryCode\Api\CodedCategoryLinkManagementInterface" type="Ampersand\CategoryCode\Model\CodedCategoryLinkManagement"/>
     <type name="Magento\Framework\EntityManager\MetadataPool">
         <arguments>
             <argument name="metadata" xsi:type="array">

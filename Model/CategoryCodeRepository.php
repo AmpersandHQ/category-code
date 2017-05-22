@@ -38,6 +38,32 @@ class CategoryCodeRepository
         return $entity->getCategoryId();
     }
 
+    /**
+     * Get a list of category ids of given codes
+     *
+     * @param array $codes
+     * @throws \Exception
+     * @throws \InvalidArgumentException
+     * @return array
+     */
+    public function getIds(array $codes)
+    {
+        array_walk($codes, [$this, 'validateCategoryCode']);
+
+        $connection = $this->resourceConnection->getConnection();
+        $select = $connection->select()->from(CategoryCodeInterface::CATEGORY_CODE)
+            ->where(CategoryCodeInterface::CATEGORY_CODE . ' IN (?)', $codes);
+
+        $records = $connection->fetchAll($select);
+
+        $idByCode = [];
+        foreach ($records as $record) {
+            $idByCode[$record[\Ampersand\CategoryCode\Api\Data\CategoryCodeInterface::CATEGORY_CODE]] = $record[\Ampersand\CategoryCode\Api\Data\CategoryCodeInterface::CATEGORY_ID];
+        }
+
+        return $idByCode;
+    }
+
     public function getCode($id)
     {
         $connection = $this->resourceConnection->getConnection();
