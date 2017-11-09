@@ -3,4 +3,7 @@
     <event name="magento_catalog_api_data_categoryinterface_save_after">
         <observer name="save_code_to_id_mapping_after_category_save" instance="Ampersand\CategoryCode\Observer\AfterCategorySave" />
     </event>
+    <event name="catalog_category_load_after">
+        <observer name="Ampersand\CategoryCode\Observer\AfterCategoryLoad" instance="Ampersand\CategoryCode\Observer\AfterCategoryLoad" />
+    </event>
 </config>
