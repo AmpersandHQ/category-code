@@ -25,10 +25,18 @@ class CodedCategoryLinkManagement implements \Ampersand\CategoryCode\Api\CodedCa
      */
     public function assignProductToCategories($productSku, array $categoryCodes)
     {
+        $categoryCodes = array_unique($categoryCodes);
+
+        /** @var array $categoryIds */
         $categoryIds = $this->categoryCodeRepository->getIds($categoryCodes);
 
-        if (empty($categoryIds)) {
-            throw new \Magento\Framework\Exception\NoSuchEntityException(__('Given category codes can not be found in the system'));
+        $codes = array_keys($categoryIds);
+        $missingCodes = array_diff($categoryCodes, $codes);
+
+        if (!empty($missingCodes)) {
+            throw new \Magento\Framework\Exception\NoSuchEntityException(
+                __('Given category codes [%1], can not be found in the system', implode(", ", $missingCodes))
+            );
         }
 
         // Assert product exists. Not found exception will be thrown if not exists
