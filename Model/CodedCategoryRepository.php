@@ -51,7 +51,7 @@ class CodedCategoryRepository implements CodedCategoryRepositoryInterface
             throw new NoSuchEntityException;
         }
 
-        return $this->categoryRepository->get($categoryId);
+        return $this->categoryRepository->get($categoryId, $storeId);
     }
 
     public function deleteByIdentifier($categoryCode)
