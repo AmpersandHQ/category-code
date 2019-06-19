@@ -52,7 +52,7 @@ interface CodedCategoryProductLinkInterface extends ExtensibleDataInterface
     /**
      * Retrieve existing extension attributes object.
      *
-     * @return \Ampersand\CategoryCode\Api\Data\CodedCategoryProductLinkExtensionInterface|null
+     * @return \Ampersand\CategoryCode\Api\Data\CodedCategoryProductLinkExtensionInterface|\Magento\Framework\Api\ExtensionAttributesInterface|null
      */
     public function getExtensionAttributes();
 
