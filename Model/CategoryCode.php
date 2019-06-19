@@ -11,6 +11,9 @@ class CategoryCode extends DataObject implements CategoryCodeInterface
         return $this->getData(self::CATEGORY_CODE);
     }
 
+    /**
+     * @return $this
+     */
     public function setCategoryCode($code)
     {
         return $this->setData(self::CATEGORY_CODE, $code);
@@ -21,6 +24,9 @@ class CategoryCode extends DataObject implements CategoryCodeInterface
         return $this->getData(self::CATEGORY_ID);
     }
 
+    /**
+     * @return $this
+     */
     public function setCategoryId($id)
     {
         return $this->setData(self::CATEGORY_ID, $id);
