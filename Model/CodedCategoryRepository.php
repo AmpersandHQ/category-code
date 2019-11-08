@@ -6,23 +6,42 @@ use Magento\Catalog\Api\Data\CategoryInterface;
 use Ampersand\CategoryCode\Api\CodedCategoryRepositoryInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use SnowIO\Lock\Api\LockService;
+use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory as CategoryCollectionFactory;
 
 class CodedCategoryRepository implements CodedCategoryRepositoryInterface
 {
+    /** @var CategoryRepositoryInterface */
     private $categoryRepository;
+    /** @var LockService */
     private $lockService;
+    /** @var CategoryCodeRepository */
     private $categoryCodeRepository;
+    /** @var CategoryCollectionFactory */
+    private $categoryCollectionFactory;
 
+    /**
+     * CodedCategoryRepository constructor.
+     * @param CategoryRepositoryInterface $categoryRepository
+     * @param LockService $lockService
+     * @param CategoryCodeRepository $categoryCodeRepository
+     * @param SearchResultsInterfaceFactory $searchResultsFactory
+     */
     public function __construct(
         CategoryRepositoryInterface $categoryRepository,
         LockService $lockService,
-        CategoryCodeRepository $categoryCodeRepository
+        CategoryCodeRepository $categoryCodeRepository,
+        CategoryCollectionFactory $categoryCollectionFactory
     ) {
         $this->categoryRepository = $categoryRepository;
         $this->lockService = $lockService;
         $this->categoryCodeRepository = $categoryCodeRepository;
+        $this->categoryCollectionFactory = $categoryCollectionFactory;
     }
 
+    /**
+     * @param CategoryInterface $category
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
+     */
     public function save(CategoryInterface $category)
     {
         if (null === $extensionAttributes = $category->getExtensionAttributes()) {
@@ -43,6 +62,12 @@ class CodedCategoryRepository implements CodedCategoryRepositoryInterface
         }
     }
 
+    /**
+     * @param string $categoryCode
+     * @param null $storeId
+     * @return CategoryInterface
+     * @throws NoSuchEntityException
+     */
     public function get($categoryCode, $storeId = null)
     {
         $categoryId = $this->categoryCodeRepository->getId($categoryCode);
@@ -54,6 +79,32 @@ class CodedCategoryRepository implements CodedCategoryRepositoryInterface
         return $this->categoryRepository->get($categoryId, $storeId);
     }
 
+    /**
+     * @param array $categoryCodes
+     * @param array|null $attributesToSelect
+     * @return \Magento\Catalog\Model\ResourceModel\Category\Collection
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function getList(array $categoryCodes, $attributesToSelect = null)
+    {
+        $collection = $this->categoryCollectionFactory->create();
+        $categoryIds = array_values($this->categoryCodeRepository->getIds($categoryCodes));
+
+        if ($attributesToSelect) {
+            $collection->addAttributeToSelect($attributesToSelect);
+        }
+        $collection->addAttributeToFilter('entity_id', ['in' => $categoryIds]);
+
+        return $collection;
+    }
+
+    /**
+     * @param string $categoryCode
+     * @return bool|void
+     * @throws NoSuchEntityException
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\StateException
+     */
     public function deleteByIdentifier($categoryCode)
     {
         $this->acquireLock($categoryCode);
@@ -67,6 +118,9 @@ class CodedCategoryRepository implements CodedCategoryRepositoryInterface
         }
     }
 
+    /**
+     * @param $code
+     */
     private function acquireLock($code)
     {
         if (!$this->lockService->acquireLock($this->getLockName($code), 0)) {
@@ -74,16 +128,27 @@ class CodedCategoryRepository implements CodedCategoryRepositoryInterface
         }
     }
 
+    /**
+     * @param $code
+     */
     private function releaseLock($code)
     {
         $this->lockService->releaseLock($this->getLockName($code));
     }
 
+    /**
+     * @param $code
+     * @return string
+     */
     private function getLockName($code)
     {
         return "category.{$code}";
     }
 
+    /**
+     * @param $categoryCode
+     * @param CategoryInterface $category
+     */
     private function replaceCodesWithIds($categoryCode, CategoryInterface $category)
     {
         if (null !== $categoryId = $this->categoryCodeRepository->getId($categoryCode)) {
