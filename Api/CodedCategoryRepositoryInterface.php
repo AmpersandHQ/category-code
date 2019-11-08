@@ -29,6 +29,16 @@ interface CodedCategoryRepositoryInterface
     public function get($categoryCode, $storeId = null);
 
     /**
+     * Get list of categories from search criteria
+     *
+     * @param array $categoryCodes
+     * @param array|null $attributesToSelect
+     * @return \Magento\Catalog\Model\ResourceModel\Category\Collection
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function getList(array $categoryCodes, array $attributesToSelect = null);
+
+    /**
      * Delete category by code
      *
      * @param string $categoryCode
