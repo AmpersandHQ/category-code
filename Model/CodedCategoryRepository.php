@@ -24,7 +24,7 @@ class CodedCategoryRepository implements CodedCategoryRepositoryInterface
      * @param CategoryRepositoryInterface $categoryRepository
      * @param LockService $lockService
      * @param CategoryCodeRepository $categoryCodeRepository
-     * @param SearchResultsInterfaceFactory $searchResultsFactory
+     * @param CategoryCollectionFactory $categoryCollectionFactory
      */
     public function __construct(
         CategoryRepositoryInterface $categoryRepository,
@@ -119,7 +119,7 @@ class CodedCategoryRepository implements CodedCategoryRepositoryInterface
     }
 
     /**
-     * @param $code
+     * @param string $code
      */
     private function acquireLock($code)
     {
@@ -129,7 +129,7 @@ class CodedCategoryRepository implements CodedCategoryRepositoryInterface
     }
 
     /**
-     * @param $code
+     * @param string $code
      */
     private function releaseLock($code)
     {
@@ -137,7 +137,7 @@ class CodedCategoryRepository implements CodedCategoryRepositoryInterface
     }
 
     /**
-     * @param $code
+     * @param string $code
      * @return string
      */
     private function getLockName($code)
@@ -146,7 +146,7 @@ class CodedCategoryRepository implements CodedCategoryRepositoryInterface
     }
 
     /**
-     * @param $categoryCode
+     * @param string $categoryCode
      * @param CategoryInterface $category
      */
     private function replaceCodesWithIds($categoryCode, CategoryInterface $category)
