@@ -36,7 +36,7 @@ interface CodedCategoryRepositoryInterface
      * @return \Magento\Catalog\Model\ResourceModel\Category\Collection
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getList(array $categoryCodes, array $attributesToSelect = null);
+    public function getList(array $categoryCodes, $attributesToSelect = null);
 
     /**
      * Delete category by code
