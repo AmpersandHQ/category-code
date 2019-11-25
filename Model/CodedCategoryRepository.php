@@ -85,7 +85,7 @@ class CodedCategoryRepository implements CodedCategoryRepositoryInterface
      * @return \Magento\Catalog\Model\ResourceModel\Category\Collection
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function getList(array $categoryCodes, $attributesToSelect = null)
+    public function getList(array $categoryCodes, array $attributesToSelect = null)
     {
         $collection = $this->categoryCollectionFactory->create();
         $categoryIds = array_values($this->categoryCodeRepository->getIds($categoryCodes));
