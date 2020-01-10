@@ -100,7 +100,7 @@ class CodedCategoryRepository implements CodedCategoryRepositoryInterface
 
     /**
      * @param string $categoryCode
-     * @return bool|void
+     * @return bool
      * @throws NoSuchEntityException
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\StateException
@@ -116,6 +116,8 @@ class CodedCategoryRepository implements CodedCategoryRepositoryInterface
         } finally {
             $this->releaseLock($categoryCode);
         }
+
+        return true;
     }
 
     /**
