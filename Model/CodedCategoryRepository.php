@@ -60,6 +60,7 @@ class CodedCategoryRepository implements CodedCategoryRepositoryInterface
         } finally {
             $this->releaseLock($categoryCode);
         }
+        return true;
     }
 
     /**
