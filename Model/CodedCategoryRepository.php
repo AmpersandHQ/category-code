@@ -64,7 +64,7 @@ class CodedCategoryRepository implements CodedCategoryRepositoryInterface
 
     /**
      * @param string $categoryCode
-     * @param null $storeId
+     * @param int $storeId
      * @return CategoryInterface
      * @throws NoSuchEntityException
      */
